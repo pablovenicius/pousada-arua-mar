@@ -23,11 +23,11 @@ export const metadata: Metadata = {
     "Casa de hóspedes com quatro acomodações, cinco minutos da praia. Diárias a partir de R$ 130,00 e recepção 24h.",
 };
 
-// Mantém o mesmo layout do desktop no celular: em vez de reorganizar os
-// elementos (design responsivo tradicional), o navegador mobile renderiza a
-// página com esta largura fixa e apenas reduz a escala para caber na tela.
+// Viewport responsivo padrão: o site se adapta automaticamente ao tamanho da
+// tela (celular ou PC), sem zoom manual e sem miniaturizar o layout do desktop.
 export const viewport: Viewport = {
-  width: 1320,
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
