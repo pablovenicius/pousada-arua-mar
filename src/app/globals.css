@@ -1,26 +1,32 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --tinta: #0E2A33;
+  --tinta-suave: #34535C;
+  --tinta-clara: #6B8188;
+  --areia: #FBF8F3;
+  --areia-media: #E8DCCB;
+  --ouro: #B07C3F;
+  --ouro-claro: #E4C89C;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+* { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--areia);
+  color: var(--tinta);
+  -webkit-font-smoothing: antialiased;
 }
+
+a { color: var(--tinta); text-decoration: none; }
+a:hover { color: var(--ouro); }
+
+::selection { background: #E8D9C3; }
+
+/* estados de hover que não cabem em style inline */
+.link-nav:hover { color: var(--ouro); }
+.btn-escuro:hover { background: var(--ouro); color: var(--areia); }
+.btn-ouro:hover { background: var(--areia); color: var(--tinta); }
+.btn-contorno-claro:hover { background: rgba(251, 248, 243, 0.14); color: #FBF8F3; }
+.btn-contorno-escuro:hover { background: rgba(14, 42, 51, 0.06); color: var(--tinta); }
+.card-quarto:hover { border-color: var(--ouro); }
