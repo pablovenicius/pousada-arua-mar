@@ -30,3 +30,89 @@ a:hover { color: var(--ouro); }
 .btn-contorno-claro:hover { background: rgba(251, 248, 243, 0.14); color: #FBF8F3; }
 .btn-contorno-escuro:hover { background: rgba(14, 42, 51, 0.06); color: var(--tinta); }
 .card-quarto:hover { border-color: var(--ouro); }
+
+/* ================= Header responsivo (celular) =================
+   No PC (min-width 769px), .nav-desktop aparece normalmente e o botão
+   hambúrguer/menu mobile ficam escondidos — o visual do PC não muda.
+   No celular (max-width 768px), .nav-desktop some e o hambúrguer aparece. */
+
+.btn-hamburguer {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icone-hamburguer {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 16px;
+}
+.icone-hamburguer span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--tinta);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+.icone-hamburguer span:nth-child(1) { top: 0; }
+.icone-hamburguer span:nth-child(2) { top: 7px; }
+.icone-hamburguer span:nth-child(3) { top: 14px; }
+.icone-hamburguer[data-aberto="true"] span:nth-child(1) { top: 7px; transform: rotate(45deg); }
+.icone-hamburguer[data-aberto="true"] span:nth-child(2) { opacity: 0; }
+.icone-hamburguer[data-aberto="true"] span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
+
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 clamp(20px, 5vw, 64px);
+  transition: max-height 0.32s ease, opacity 0.28s ease, padding 0.32s ease;
+}
+.nav-mobile[data-aberto="true"] {
+  max-height: 480px;
+  opacity: 1;
+  padding: 6px clamp(20px, 5vw, 64px) 26px;
+}
+
+.link-nav-mobile {
+  padding: 14px 0;
+  color: var(--tinta);
+  border-bottom: 1px solid rgba(14, 42, 51, 0.08);
+}
+.link-nav-mobile:hover { color: var(--ouro); }
+
+.btn-whatsapp-mobile {
+  margin-top: 18px;
+  padding: 14px 22px;
+  text-align: center;
+  background: #0E2A33;
+  color: #FBF8F3;
+  border-radius: 999px;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+}
+.btn-whatsapp-mobile:hover { background: var(--ouro); color: #FBF8F3; }
+
+@media (max-width: 768px) {
+  .nav-desktop { display: none !important; }
+  .btn-hamburguer { display: inline-flex !important; }
+  .nav-mobile { display: flex; }
+
+  /* Cards de quartos: 1 coluna vertical, mesma estrutura visual do PC */
+  .grid-quartos { grid-template-columns: 1fr !important; }
+}

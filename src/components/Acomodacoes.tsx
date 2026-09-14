@@ -59,6 +59,7 @@ export default function Acomodacoes() {
         </div>
 
         <div
+          className="grid-quartos"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
