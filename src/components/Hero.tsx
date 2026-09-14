@@ -1,19 +1,31 @@
+import Image from "next/image";
 import ImageSlot from "./ImageSlot";
 import { FOTO_HERO } from "@/data/pousada";
 
 export default function Hero() {
   return (
     <section
+      className="hero-secao"
       style={{
         position: "relative",
-        minHeight: "min(88vh, 760px)",
         display: "grid",
         alignItems: "end",
         padding: "clamp(40px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px)",
       }}
     >
-      <div style={{ position: "absolute", inset: 0 }}>
-        <ImageSlot foto={FOTO_HERO} priority />
+      <div className="hero-imagem-wrap" style={{ position: "absolute", inset: 0, background: "#0E2A33" }}>
+        {FOTO_HERO.src ? (
+          <Image
+            src={FOTO_HERO.src}
+            alt={FOTO_HERO.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="hero-imagem"
+          />
+        ) : (
+          <ImageSlot foto={FOTO_HERO} priority />
+        )}
       </div>
       <div
         style={{

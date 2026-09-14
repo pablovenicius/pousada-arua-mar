@@ -116,3 +116,24 @@ a:hover { color: var(--ouro); }
   /* Cards de quartos: 1 coluna vertical, mesma estrutura visual do PC */
   .grid-quartos { grid-template-columns: 1fr !important; }
 }
+
+/* ================= Hero: foto sem corte no celular =================
+   No PC (min-width 768px) a seção mantém a altura e o enquadramento
+   originais (foto ocupando 100%, "object-cover") — nada muda.
+   No celular a altura da seção diminui em etapas e a foto passa para
+   "object-contain", exibindo o quadro inteiro em vez de cortar as laterais. */
+
+.hero-secao {
+  min-height: 250px;
+}
+.hero-imagem-wrap { background: #0E2A33; }
+.hero-imagem { object-fit: contain; }
+
+@media (min-width: 480px) {
+  .hero-secao { min-height: 400px; }
+}
+
+@media (min-width: 768px) {
+  .hero-secao { min-height: min(88vh, 760px); }
+  .hero-imagem { object-fit: cover; }
+}
