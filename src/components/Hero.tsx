@@ -8,13 +8,14 @@ export default function Hero() {
       className="hero-secao"
       style={{
         position: "relative",
+        zIndex: 0,
         display: "grid",
         alignItems: "end",
         padding: "clamp(40px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px)",
         overflow: "hidden",
       }}
     >
-      <div className="hero-imagem-wrap" style={{ position: "absolute", inset: 0, zIndex: -10 }}>
+      <div className="hero-imagem-wrap" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         {FOTO_HERO.src ? (
           <Image
             src={FOTO_HERO.src}
@@ -32,13 +33,13 @@ export default function Hero() {
         style={{
           position: "absolute",
           inset: 0,
-          zIndex: 0,
+          zIndex: 1,
           background:
             "linear-gradient(180deg, rgba(14,42,51,0.42) 0%, rgba(14,42,51,0.15) 40%, rgba(14,42,51,0.82) 100%)",
           pointerEvents: "none",
         }}
       />
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 780, color: "#FBF8F3" }}>
+      <div style={{ position: "relative", zIndex: 2, maxWidth: 780, color: "#FBF8F3" }}>
         <p
           style={{
             margin: "0 0 22px",
