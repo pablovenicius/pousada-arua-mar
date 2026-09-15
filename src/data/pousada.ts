@@ -25,6 +25,18 @@ export const FOTO_HERO: Foto = {
   placeholder: "Foto da pousada vista do mar — horizontal, alta resolução",
 };
 
+// Versão do banner usada no celular. Enquanto uma foto vertical/otimizada
+// para mobile não é enviada, reaproveita a mesma foto do desktop — o que já
+// resolve o corte do logo, pois o "object-position" do mobile é diferente
+// (ver .hero-imagem-mobile no globals.css). Quando tiver uma foto vertical
+// (ex.: recortada em 3:4 ou 9:16 mostrando o logo por inteiro), basta trocar
+// o "src" abaixo por ela, ex.: "/fotos/foto-pousada-vista-do-mar-mobile.jpeg".
+export const FOTO_HERO_MOBILE: Foto = {
+  src: "/fotos/foto-pousada-vista-do-mar.jpeg",
+  alt: "Fachada da Pousada Aruamar vista do mar",
+  placeholder: "Foto da pousada vista do mar — vertical, otimizada para celular",
+};
+
 export const FOTOS_POUSADA: Foto[] = [
   { src: "/fotos/varanda-ou-terraco.jpeg", alt: "Varanda da pousada", placeholder: "Varanda ou terraço" },
   { src: "/fotos/detalhe-do-cafe.jpeg", alt: "Café da manhã servido na varanda", placeholder: "Detalhe do café" },

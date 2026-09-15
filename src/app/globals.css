@@ -119,13 +119,31 @@ a:hover { color: var(--ouro); }
 
 /* ================= Hero: foto de fundo cobrindo 100% da seção =================
    A foto cobre toda a área escura atrás dos textos/botões em qualquer tela
-   (celular, tablet e PC), sem faixas vazias — object-fit fica sempre "cover". */
+   (celular, tablet e PC), sem faixas vazias — object-fit fica sempre "cover".
+
+   Duas imagens ficam no DOM (.hero-imagem-desktop e .hero-imagem-mobile) e o
+   CSS mostra só uma delas por vez, dependendo da largura da tela — é o
+   equivalente ao elemento <picture> com <source media="..."> para o
+   next/image, que não suporta <picture> nativamente ("art direction"). */
 
 .hero-secao {
   min-height: 85vh;
 }
-.hero-imagem { object-fit: cover; object-position: center; }
+
+.hero-imagem { object-fit: cover; }
+
+.hero-imagem-desktop { display: block; object-position: center; }
+.hero-imagem-mobile { display: none; }
 
 @media (min-width: 768px) {
   .hero-secao { min-height: min(88vh, 760px); }
+}
+
+@media (max-width: 767px) {
+  .hero-imagem-desktop { display: none; }
+  .hero-imagem-mobile {
+    display: block;
+    /* Prioriza o lado esquerdo da foto, onde fica o logo, em vez do centro */
+    object-position: left center;
+  }
 }

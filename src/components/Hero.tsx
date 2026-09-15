@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ImageSlot from "./ImageSlot";
-import { FOTO_HERO } from "@/data/pousada";
+import { FOTO_HERO, FOTO_HERO_MOBILE } from "@/data/pousada";
 
 export default function Hero() {
   return (
@@ -16,18 +16,31 @@ export default function Hero() {
       }}
     >
       <div className="hero-imagem-wrap" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        {FOTO_HERO.src ? (
+        {/* Versão desktop/tablet — troca automática pela versão mobile abaixo de 768px (ver globals.css) */}
+        {FOTO_HERO.src && (
           <Image
             src={FOTO_HERO.src}
             alt={FOTO_HERO.alt}
             fill
             priority
             sizes="100vw"
-            className="hero-imagem"
+            className="hero-imagem hero-imagem-desktop"
           />
-        ) : (
-          <ImageSlot foto={FOTO_HERO} priority />
         )}
+        {/* Versão mobile — usa object-position à esquerda para não cortar o logo;
+            troque FOTO_HERO_MOBILE.src em data/pousada.ts por uma foto vertical
+            quando tiver uma disponível */}
+        {FOTO_HERO_MOBILE.src && (
+          <Image
+            src={FOTO_HERO_MOBILE.src}
+            alt={FOTO_HERO_MOBILE.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="hero-imagem hero-imagem-mobile"
+          />
+        )}
+        {!FOTO_HERO.src && !FOTO_HERO_MOBILE.src && <ImageSlot foto={FOTO_HERO} priority />}
       </div>
       <div
         style={{
