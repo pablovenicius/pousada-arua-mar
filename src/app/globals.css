@@ -127,7 +127,7 @@ a:hover { color: var(--ouro); }
    next/image, que não suporta <picture> nativamente ("art direction"). */
 
 .hero-secao {
-  min-height: 85vh;
+  min-height: min(75vw, 70vh);
 }
 
 .hero-imagem { object-fit: cover; }
@@ -140,10 +140,16 @@ a:hover { color: var(--ouro); }
 }
 
 @media (max-width: 767px) {
+  /* Em vez de forçar quase a altura toda da tela (o que obrigava a foto a
+     ampliar demais para cobrir essa altura, cortando as laterais), a altura
+     mínima passa a ser proporcional à largura da tela — bem mais baixa e
+     larga, próxima da proporção da própria foto — então ela aparece quase
+     inteira, como no exemplo desejado. Se o texto precisar de mais espaço,
+     a seção cresce normalmente (isso é só uma altura mínima, não fixa). */
   .hero-imagem-desktop { display: none; }
   .hero-imagem-mobile {
     display: block;
-    /* Prioriza o lado esquerdo da foto, onde fica o logo, em vez do centro */
-    object-position: left center;
+    /* Crop mínimo: prioriza o topo da foto (onde fica o logo) em vez do centro */
+    object-position: center top;
   }
 }
