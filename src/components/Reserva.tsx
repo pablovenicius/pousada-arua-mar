@@ -20,7 +20,7 @@ export default function Reserva() {
             textWrap: "balance",
           }}
         >
-          Fale com a gente e escolha seu quarto.
+          Fale com a gente e escolha sua suíte.
         </h2>
         <p style={{ margin: "0 auto 38px", maxWidth: "50ch", fontSize: 17, lineHeight: 1.8, color: "#4A5F66", textWrap: "pretty" }}>
           Atendimento direto com a recepção, todos os dias, 24 horas. Respondemos em minutos e

@@ -94,7 +94,7 @@ export default function Hero() {
         <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
           <a
             className="btn-ouro"
-            href="#reserva"
+            href="/#reserva"
             style={{
               padding: "16px 30px",
               background: "#B07C3F",
@@ -109,7 +109,7 @@ export default function Hero() {
           </a>
           <a
             className="btn-contorno-claro"
-            href="#acomodacoes"
+            href="/#acomodacoes"
             style={{
               padding: "16px 30px",
               border: "1px solid rgba(251,248,243,0.5)",

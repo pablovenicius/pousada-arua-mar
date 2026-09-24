@@ -16,8 +16,14 @@ export const CONTATO: Contato = {
   instagram: "https://www.instagram.com/pousadaaruamar",
 };
 
-export const linkWhatsApp = (telefone: string = CONTATO.telefone): string =>
-  `https://wa.me/55${telefone.replace(/\D/g, "")}`;
+export const linkWhatsApp = (telefone: string = CONTATO.telefone, mensagem?: string): string => {
+  const numero = telefone.replace(/\D/g, "");
+  const base = `https://wa.me/55${numero}`;
+  return mensagem ? `${base}?text=${encodeURIComponent(mensagem)}` : base;
+};
+
+// URL da página individual de cada suíte (as rotas continuam /quarto-individual, /quarto-duplo…)
+export const caminhoQuarto = (quartoId: string): string => `/quarto-${quartoId}`;
 
 export const FOTO_HERO: Foto = {
   src: "/fotos/foto-pousada-vista-do-mar.jpeg",
@@ -40,7 +46,7 @@ export const FOTO_HERO_MOBILE: Foto = {
 export const FOTOS_POUSADA: Foto[] = [
   { src: "/fotos/varanda-ou-terraco.jpeg", alt: "Varanda da pousada", placeholder: "Varanda ou terraço" },
   { src: "/fotos/detalhe-do-cafe.jpeg", alt: "Café da manhã servido na varanda", placeholder: "Detalhe do café" },
-  { src: "/fotos/quarto-com-vista.jpeg", alt: "Quarto com vista para o mar", placeholder: "Quarto com vista" },
+  { src: "/fotos/quarto-com-vista.jpeg", alt: "Suíte com vista para o mar", placeholder: "Suíte com vista" },
   { src: "/fotos/piscina-ou-jardim.jpg", alt: "Área externa da pousada", placeholder: "Piscina ou jardim" },
 ];
 
@@ -58,7 +64,7 @@ export const SELOS: Selo[] = [
 ];
 
 export const MIMOS: Mimo[] = [
-  { titulo: "Ar-condicionado", texto: "Em todos os quartos, com controle individual." },
+  { titulo: "Ar-condicionado", texto: "Em todas as suítes, com controle individual." },
   { titulo: "Wi-Fi de fibra", texto: "Estável em toda extensão da pousada." },
   { titulo: "Estacionamento", texto: "Vaga gratuita para hóspedes." },
 ];
@@ -71,34 +77,34 @@ export const QUARTOS: Quarto[] = [
     preco: 130,
     texto:
       "Cama de Casal larga, mesa e banheiro privativo. Para quem viaja só e dorme com o som do mar.",
-    foto: { src: "/fotos/quarto-individual.jpeg", alt: "Quarto individual", placeholder: "Quarto individual" },
+    foto: { src: "/fotos/quarto-individual.jpeg", alt: "Suíte individual", placeholder: "Suíte individual" },
   },
   {
     id: "duplo",
-    nome: "Duplo",
+    nome: "Dupla",
     pessoas: "2 pessoas",
     preco: 130,
     texto:
       "Cama de casal ou duas de solteiro, à sua escolha com mesa e banheiro privativo.",
-    foto: { src: "/fotos/quarto-duplo.jpeg", alt: "Quarto duplo", placeholder: "Quarto duplo" },
+    foto: { src: "/fotos/quarto-duplo.jpeg", alt: "Suíte dupla", placeholder: "Suíte dupla" },
   },
   {
     id: "triplo",
-    nome: "Triplo",
+    nome: "Tripla",
     pessoas: "3 pessoas",
     preco: 170,
     texto:
       "Cama de Casal mais solteiro, mesa e banheiro privativo. O favorito de quem viaja com um filho.",
-    foto: { src: "/fotos/quarto-triplo.jpeg", alt: "Quarto triplo", placeholder: "Quarto triplo" },
+    foto: { src: "/fotos/quarto-triplo.jpeg", alt: "Suíte tripla", placeholder: "Suíte tripla" },
   },
   {
     id: "quadruplo",
-    nome: "Quádruplo",
+    nome: "Quádrupla",
     pessoas: "4 pessoas",
     preco: 210,
     texto:
       "Camas de casal e duas de solteiro. Mesa e banheiro privativo e espaço para bagagem de família inteira sem tropeço.",
-    foto: { src: "/fotos/quarto-quadruplo.jpeg", alt: "Quarto quádruplo", placeholder: "Quarto quádruplo" },
+    foto: { src: "/fotos/quarto-quadruplo.jpeg", alt: "Suíte quádrupla", placeholder: "Suíte quádrupla" },
   },
 ];
 

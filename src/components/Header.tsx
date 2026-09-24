@@ -8,9 +8,9 @@ import IconInstagram from "./IconInstagram";
 const linkNav: CSSProperties = { color: "#34535C" };
 
 const LINKS_NAV = [
-  { href: "#acomodacoes", label: "Acomodações" },
-  { href: "#experiencia", label: "A pousada" },
-  { href: "#localizacao", label: "Onde estamos" },
+  { href: "/#acomodacoes", label: "Acomodações" },
+  { href: "/#experiencia", label: "A pousada" },
+  { href: "/#localizacao", label: "Onde estamos" },
 ];
 
 export default function Header() {
@@ -91,7 +91,7 @@ export default function Header() {
           </a>
           <a
             className="btn-escuro"
-            href="#reserva"
+            href="/#reserva"
             style={{
               padding: "11px 22px",
               background: "#0E2A33",
