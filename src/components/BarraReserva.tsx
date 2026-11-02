@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CAFE_DA_MANHA, QUARTOS, formatarPreco, linkWhatsApp } from "@/data/pousada";
+import { CAFE_DA_MANHA, MENSAGEM_PADRAO, QUARTOS, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
 import IconWhatsApp from "./IconWhatsApp";
 
@@ -84,7 +84,7 @@ export default function BarraReserva() {
   const txtHospedes = `${hospedes} ${hospedes === 1 ? "pessoa" : "pessoas"}`;
   const txtNoites = `${noites} ${noites === 1 ? "noite" : "noites"}`;
   const mensagem =
-    `Olá! Gostaria de consultar disponibilidade na Pousada Aruamar: Suíte ${suite.nome}, ${txtHospedes}, ` +
+    `${MENSAGEM_PADRAO}\n\nSimulação: Suíte ${suite.nome}, ${txtHospedes}, ` +
     `de ${diaMes(checkin)} a ${diaMes(checkout)} (${txtNoites})${cafe ? ", com café da manhã" : ""}.`;
 
   return (

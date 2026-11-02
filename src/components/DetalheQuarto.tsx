@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Quarto } from "@/types/pousada";
-import { MIMOS, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
+import { MENSAGEM_PADRAO, MIMOS, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
 import IconWhatsApp from "./IconWhatsApp";
 
@@ -10,7 +10,7 @@ interface DetalheQuartoProps {
 }
 
 export default function DetalheQuarto({ quarto }: DetalheQuartoProps) {
-  const mensagemWhatsApp = `Olá! Gostaria de reservar a Suíte ${quarto.nome} (${quarto.pessoas}) da Pousada Aruamar.`;
+  const mensagemWhatsApp = `${MENSAGEM_PADRAO}\n\nTenho interesse na Suíte ${quarto.nome} (${quarto.pessoas}).`;
   const outras = QUARTOS.filter((q) => q.id !== quarto.id);
 
   return (

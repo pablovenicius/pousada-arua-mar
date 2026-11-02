@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AVISOS, DIARIA_MAXIMA, DIARIA_MINIMA, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
+import { AVISOS, DIARIA_MAXIMA, DIARIA_MINIMA, MENSAGEM_PADRAO, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
 
 const celula = { padding: "14px 18px" };
@@ -13,7 +13,7 @@ const linha = { borderTop: "1px solid rgba(255,255,255,0.1)" };
 export default function Acomodacoes() {
   const [indice, setIndice] = useState(1);
   const atual = QUARTOS[indice];
-  const mensagem = `Olá! Gostaria de reservar a Suíte ${atual.nome} (${atual.pessoas}) da Pousada Aruamar.`;
+  const mensagem = `${MENSAGEM_PADRAO}\n\nTenho interesse na Suíte ${atual.nome} (${atual.pessoas}).`;
 
   return (
     <section

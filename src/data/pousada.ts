@@ -30,7 +30,9 @@ export const linkWhatsApp = (telefone: string = CONTATO.telefone, mensagem?: str
   return mensagem ? `${base}?text=${encodeURIComponent(mensagem)}` : base;
 };
 
-export const MENSAGEM_PADRAO = "Olá! Gostaria de informações sobre a Pousada Aruamar.";
+/** Mensagem enviada por todos os botões de WhatsApp do site. */
+export const MENSAGEM_PADRAO =
+  "Olá! Vim pelo Site / Instagram e gostaria de saber mais sobre as reservas e suítes na Pousada Aruamar.";
 
 // URL da página individual de cada suíte (as rotas continuam /quarto-individual, /quarto-duplo…)
 export const caminhoQuarto = (quartoId: string): string => `/quarto-${quartoId}`;
