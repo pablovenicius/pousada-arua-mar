@@ -69,9 +69,10 @@ const botaoQtd = {
  * botão abre o WhatsApp com a mensagem pronta.
  */
 export default function BarraReserva() {
+  // Exemplo inicial: 1 diária para 1 pessoa (Suíte Individual), até o visitante simular.
   const [checkin, setCheckin] = useState(() => dataMais(7));
-  const [checkout, setCheckout] = useState(() => dataMais(10));
-  const [hospedes, setHospedes] = useState(2);
+  const [checkout, setCheckout] = useState(() => dataMais(8));
+  const [hospedes, setHospedes] = useState(1);
   const [cafe, setCafe] = useState(false);
 
   const tIn = paraUTC(checkin);
