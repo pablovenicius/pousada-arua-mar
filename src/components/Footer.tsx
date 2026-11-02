@@ -1,109 +1,92 @@
 import type { CSSProperties } from "react";
-import { CONTATO } from "@/data/pousada";
+import { AVISOS, CONTATO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import IconInstagram from "./IconInstagram";
 
 const rotulo: CSSProperties = {
-  margin: "0 0 12px",
-  fontSize: 11,
-  letterSpacing: "0.22em",
+  margin: "0 0 4px",
+  fontSize: 12,
+  fontWeight: 800,
+  letterSpacing: "0.1em",
   textTransform: "uppercase",
-  color: "#E4C89C",
+  color: "#FFFFFF",
 };
 
-const texto: CSSProperties = { margin: 0, fontSize: 14, lineHeight: 1.9 };
+const coluna: CSSProperties = { flex: "1 1 200px", display: "flex", flexDirection: "column", gap: 10, fontSize: 14 };
+const link: CSSProperties = { color: "var(--azul-claro)" };
 
 export default function Footer() {
   return (
-    <footer
-      style={{
-        background: "#0E2A33",
-        color: "rgba(251,248,243,0.7)",
-        padding: "clamp(48px, 7vw, 84px) clamp(20px, 5vw, 64px) 40px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1320,
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 40,
-        }}
-      >
-        <div>
-          <p
-            style={{
-              margin: "0 0 10px",
-              fontFamily: "var(--fonte-titulo), serif",
-              fontSize: 28,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "#FBF8F3",
-            }}
-          >
-            Aruamar
-          </p>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7 }}>
-            Pousada à beira-mar.
-            <br />
-            Aberta o ano inteiro.
-          </p>
+    <footer style={{ background: "var(--azul-noite)", color: "var(--azul-claro)", padding: "56px clamp(16px, 4vw, 40px) 32px" }}>
+      <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: 36 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 32, justifyContent: "space-between" }}>
+          <div style={{ ...coluna, flex: "1 1 260px", gap: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-aruamar.jpg" alt="Logo Pousada Aruamar" width={56} height={56} style={{ borderRadius: "50%", objectFit: "cover" }} />
+              <span style={{ fontSize: 20, fontWeight: 800, color: "#FFFFFF" }}>Pousada Aruamar</span>
+            </div>
+            <p style={{ margin: 0, lineHeight: 1.7 }}>Casa de hóspedes no bairro Aruana, a 400 metros da praia de Aracaju.</p>
+            <a
+              href={CONTATO.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Instagram da Pousada Aruamar (${CONTATO.instagramUsuario})`}
+              className="btn"
+              style={{
+                alignSelf: "flex-start",
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                border: "1px solid rgba(255,255,255,0.25)",
+                color: "#FFFFFF",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconInstagram size={20} />
+            </a>
+          </div>
+          <div style={coluna}>
+            <p style={rotulo}>Contato</p>
+            <a href={linkWhatsApp(undefined, MENSAGEM_PADRAO)} target="_blank" rel="noopener noreferrer" style={link}>
+              {CONTATO.telefone}
+            </a>
+            <a href={`mailto:${CONTATO.email}`} style={link}>
+              {CONTATO.email}
+            </a>
+            <a
+              href={CONTATO.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...link, display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
+              <IconInstagram size={16} />
+              {CONTATO.instagramUsuario}
+            </a>
+          </div>
+          <div style={coluna}>
+            <p style={rotulo}>Hospedagem</p>
+            <span>{CONTATO.checkIn}</span>
+            <span>{CONTATO.checkOut}</span>
+            <span>Recepção 24 horas</span>
+          </div>
+          <div style={coluna}>
+            <p style={rotulo}>Endereço</p>
+            <span>{CONTATO.endereco[0]}</span>
+            <span>{CONTATO.endereco[1]}</span>
+            <a href={CONTATO.mapa} target="_blank" rel="noopener noreferrer" style={{ ...link, textDecoration: "underline" }}>
+              Ver no mapa
+            </a>
+          </div>
         </div>
-        <div>
-          <p style={rotulo}>Contato</p>
-          <p style={texto}>
-            {CONTATO.telefone}
-            <br />
-            {CONTATO.email}
-          </p>
-          <a
-            href={CONTATO.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram da Pousada Aruamar"
-            style={{
-              marginTop: 12,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 14,
-              color: "rgba(251,248,243,0.7)",
-            }}
-          >
-            <IconInstagram size={18} />
-            Instagram
-          </a>
-        </div>
-        <div>
-          <p style={rotulo}>Horários</p>
-          <p style={texto}>
-            {CONTATO.checkIn}
-            <br />
-            {CONTATO.checkOut}
-          </p>
-        </div>
-        <div>
-          <p style={rotulo}>Endereço</p>
-          <p style={texto}>
-            {CONTATO.endereco[0]}
-            <br />
-            {CONTATO.endereco[1]}
-          </p>
+        <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: "#9FB3CC" }}>
+          {AVISOS.valores} {AVISOS.cafe}
+        </p>
+        <div style={{ paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.12)", fontSize: 13, color: "#9FB3CC" }}>
+          © {new Date().getFullYear()} Pousada Aruamar · Todos os direitos reservados
         </div>
       </div>
-      <p
-        style={{
-          maxWidth: 1320,
-          margin: "48px auto 0",
-          paddingTop: 22,
-          borderTop: "1px solid rgba(251,248,243,0.14)",
-          fontSize: 12,
-          letterSpacing: "0.08em",
-          color: "rgba(251,248,243,0.45)",
-        }}
-      >
-        © {new Date().getFullYear()} Pousada Aruamar · Todos os direitos reservados
-      </p>
     </footer>
   );
 }

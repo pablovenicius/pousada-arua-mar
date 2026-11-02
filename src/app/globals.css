@@ -1,45 +1,85 @@
 :root {
-  --tinta: #0E2A33;
-  --tinta-suave: #34535C;
-  --tinta-clara: #6B8188;
+  /* Paleta tirada da logo e da fachada: azul do telhado, laranja da estrela-do-mar e areia */
+  --azul: #1D4E89;
+  --azul-escuro: #0F2E52;
+  --azul-noite: #0B2340;
+  --azul-claro: #C7D6EA;
+  --coral: #E07A3F;
+  --coral-claro: #F2A773;
+  --coral-suave: #FCE9DB;
+  --coral-texto: #A9501A;
+  --coral-escuro: #6E2F0A;
+  --tinta: #0E2433;
+  --tinta-suave: #3E5466;
+  --tinta-clara: #4E6170;
   --areia: #FBF8F3;
-  --areia-media: #E8DCCB;
-  --ouro: #B07C3F;
-  --ouro-claro: #E4C89C;
+  --areia-media: #F7F2EA;
+  --borda: #ECE3D5;
+  --verde-whats: #1F8A4C;
 }
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 html, body { margin: 0; padding: 0; }
 
 body {
   background: var(--areia);
   color: var(--tinta);
+  font-family: var(--fonte-texto), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: var(--tinta); text-decoration: none; }
-a:hover { color: var(--ouro); }
+a { color: var(--azul); text-decoration: none; }
+a:hover { color: var(--azul-escuro); }
 
-::selection { background: #E8D9C3; }
+::selection { background: var(--coral-suave); }
 
-/* estados de hover que não cabem em style inline */
-.link-nav:hover { color: var(--ouro); }
-.btn-escuro:hover { background: var(--ouro); color: var(--areia); }
-.btn-ouro:hover { background: var(--areia); color: var(--tinta); }
-.btn-contorno-claro:hover { background: rgba(251, 248, 243, 0.14); color: #FBF8F3; }
-.btn-contorno-escuro:hover { background: rgba(14, 42, 51, 0.06); color: var(--tinta); }
-.card-quarto:hover { border-color: var(--ouro); }
+a, button { transition: filter 0.15s ease, transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.btn:hover, button.btn:not(:disabled):hover { filter: brightness(1.08); }
+.btn:active, button.btn:not(:disabled):active { transform: scale(0.98); }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
 
-/* ================= Header responsivo (celular) =================
-   No PC (min-width 769px), .nav-desktop aparece normalmente e o botão
-   hambúrguer/menu mobile ficam escondidos — o visual do PC não muda.
-   No celular (max-width 768px), .nav-desktop some e o hambúrguer aparece. */
+.campo:focus { outline: none; border-color: var(--azul) !important; box-shadow: 0 0 0 3px rgba(29, 78, 137, 0.18); }
 
+.link-nav { color: #33495A; }
+.link-nav:hover { color: var(--azul); }
+
+/* Destaque em itálico serifado dentro dos títulos */
+.destaque {
+  font-family: var(--fonte-titulo), serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ================= Galeria horizontal (rolagem lateral com encaixe) ================= */
+.galeria {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.galeria::-webkit-scrollbar { display: none; }
+.galeria > * { scroll-snap-align: start; }
+
+/* ================= Entrada suave das seções ao rolar ================= */
+.revelar {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.revelar[data-visivel="true"] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .revelar { opacity: 1; transform: none; transition: none; }
+}
+
+/* ================= Header responsivo (celular) ================= */
 .btn-hamburguer {
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   border: none;
@@ -74,82 +114,46 @@ a:hover { color: var(--ouro); }
   display: none;
   flex-direction: column;
   gap: 2px;
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 600;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  padding: 0 clamp(20px, 5vw, 64px);
+  padding: 0 clamp(16px, 4vw, 40px);
   transition: max-height 0.32s ease, opacity 0.28s ease, padding 0.32s ease;
 }
 .nav-mobile[data-aberto="true"] {
-  max-height: 480px;
+  max-height: 520px;
   opacity: 1;
-  padding: 6px clamp(20px, 5vw, 64px) 26px;
+  padding: 6px clamp(16px, 4vw, 40px) 24px;
 }
 
 .link-nav-mobile {
   padding: 14px 0;
   color: var(--tinta);
-  border-bottom: 1px solid rgba(14, 42, 51, 0.08);
+  border-bottom: 1px solid rgba(14, 36, 51, 0.08);
 }
-.link-nav-mobile:hover { color: var(--ouro); }
+.link-nav-mobile:hover { color: var(--azul); }
 
 .btn-whatsapp-mobile {
   margin-top: 18px;
-  padding: 14px 22px;
+  padding: 15px 22px;
   text-align: center;
-  background: #0E2A33;
-  color: #FBF8F3;
+  background: var(--azul-escuro);
+  color: #FFFFFF;
   border-radius: 999px;
-  letter-spacing: 0.1em;
-  font-size: 13px;
+  font-weight: 700;
 }
-.btn-whatsapp-mobile:hover { background: var(--ouro); color: #FBF8F3; }
+.btn-whatsapp-mobile:hover { background: var(--azul); color: #FFFFFF; }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .nav-desktop { display: none !important; }
   .btn-hamburguer { display: inline-flex !important; }
   .nav-mobile { display: flex; }
-
-  /* Cards de quartos: 1 coluna vertical, mesma estrutura visual do PC */
-  .grid-quartos { grid-template-columns: 1fr !important; }
+  .so-desktop { display: none !important; }
 }
 
-/* ================= Hero: foto de fundo cobrindo 100% da seção =================
-   A foto cobre toda a área escura atrás dos textos/botões em qualquer tela
-   (celular, tablet e PC), sem faixas vazias — object-fit fica sempre "cover".
-
-   Duas imagens ficam no DOM (.hero-imagem-desktop e .hero-imagem-mobile) e o
-   CSS mostra só uma delas por vez, dependendo da largura da tela — é o
-   equivalente ao elemento <picture> com <source media="..."> para o
-   next/image, que não suporta <picture> nativamente ("art direction"). */
-
-.hero-secao {
-  min-height: min(75vw, 70vh);
-}
-
-.hero-imagem { object-fit: cover; }
-
-.hero-imagem-desktop { display: block; object-position: center; }
-.hero-imagem-mobile { display: none; }
-
-@media (min-width: 768px) {
-  .hero-secao { min-height: min(88vh, 760px); }
-}
-
-@media (max-width: 767px) {
-  /* Em vez de forçar quase a altura toda da tela (o que obrigava a foto a
-     ampliar demais para cobrir essa altura, cortando as laterais), a altura
-     mínima passa a ser proporcional à largura da tela — bem mais baixa e
-     larga, próxima da proporção da própria foto — então ela aparece quase
-     inteira, como no exemplo desejado. Se o texto precisar de mais espaço,
-     a seção cresce normalmente (isso é só uma altura mínima, não fixa). */
-  .hero-imagem-desktop { display: none; }
-  .hero-imagem-mobile {
-    display: block;
-    /* Crop mínimo: prioriza o topo da foto (onde fica o logo) em vez do centro */
-    object-position: center top;
-  }
+/* Página de cada suíte: 1 coluna no celular */
+@media (max-width: 768px) {
+  .grid-detalhe { grid-template-columns: 1fr !important; }
 }

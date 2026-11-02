@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DetalheQuarto from "@/components/DetalheQuarto";
+import WhatsAppFlutuante from "@/components/WhatsAppFlutuante";
 import { QUARTOS } from "@/data/pousada";
 
 export const metadata: Metadata = {
@@ -16,10 +17,11 @@ export default function QuartoQuadruploPage() {
   if (!quarto) notFound();
 
   return (
-    <div style={{ fontFamily: "var(--fonte-texto), system-ui, sans-serif", overflowX: "hidden" }}>
+    <div style={{ overflowX: "hidden" }}>
       <Header />
       <DetalheQuarto quarto={quarto} />
       <Footer />
+      <WhatsAppFlutuante />
     </div>
   );
 }

@@ -6,27 +6,31 @@ import Acomodacoes from "@/components/Acomodacoes";
 import Localizacao from "@/components/Localizacao";
 import Reserva from "@/components/Reserva";
 import Footer from "@/components/Footer";
+import Revelar from "@/components/Revelar";
+import WhatsAppFlutuante from "@/components/WhatsAppFlutuante";
 
 export default function Home() {
   return (
-    <div
-      style={{
-        fontFamily: "var(--fonte-texto), system-ui, sans-serif",
-        color: "#0E2A33",
-        background: "#FBF8F3",
-        overflowX: "hidden",
-      }}
-    >
+    <div style={{ overflowX: "hidden" }}>
       <Header />
       <main>
         <Hero />
         <Selos />
-        <APousada />
-        <Acomodacoes />
-        <Localizacao />
-        <Reserva />
+        <Revelar>
+          <APousada />
+        </Revelar>
+        <Revelar>
+          <Acomodacoes />
+        </Revelar>
+        <Revelar>
+          <Localizacao />
+        </Revelar>
+        <Revelar>
+          <Reserva />
+        </Revelar>
       </main>
       <Footer />
+      <WhatsAppFlutuante />
     </div>
   );
 }

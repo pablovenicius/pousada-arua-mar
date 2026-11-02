@@ -1,4 +1,4 @@
-import type { Arredor, Contato, Foto, Mimo, Quarto, Selo } from "@/types/pousada";
+import type { Arredor, Contato, Foto, FotoGaleria, Mimo, Quarto, Selo } from "@/types/pousada";
 
 export const DIARIA_MINIMA = 130;
 export const DIARIA_MAXIMA = 210;
@@ -14,6 +14,14 @@ export const CONTATO: Contato = {
   checkIn: "Check-in a partir das 13h",
   checkOut: "Check-out até 11h",
   instagram: "https://www.instagram.com/pousadaaruamar",
+  instagramUsuario: "@pousadaaruamar",
+  mapa: "https://www.google.com/maps/search/?api=1&query=Rua+Evaldo+Campos+Junior+564+Aruana+Aracaju+SE",
+};
+
+/** Avisos exibidos junto aos preços (barra de reserva, suítes e páginas de cada suíte). */
+export const AVISOS = {
+  valores: "Os valores podem ser alterados em feriados e datas especiais.",
+  cafe: `Café da manhã é à parte: R$ ${formatarPreco(CAFE_DA_MANHA)} por pessoa, por dia.`,
 };
 
 export const linkWhatsApp = (telefone: string = CONTATO.telefone, mensagem?: string): string => {
@@ -22,45 +30,38 @@ export const linkWhatsApp = (telefone: string = CONTATO.telefone, mensagem?: str
   return mensagem ? `${base}?text=${encodeURIComponent(mensagem)}` : base;
 };
 
+export const MENSAGEM_PADRAO = "Olá! Gostaria de informações sobre a Pousada Aruamar.";
+
 // URL da página individual de cada suíte (as rotas continuam /quarto-individual, /quarto-duplo…)
 export const caminhoQuarto = (quartoId: string): string => `/quarto-${quartoId}`;
 
 export const FOTO_HERO: Foto = {
   src: "/fotos/foto-pousada-vista-do-mar.jpeg",
-  alt: "Fachada da Pousada Aruamar vista do mar",
-  placeholder: "Foto da pousada vista do mar — horizontal, alta resolução",
+  alt: "Fachada da Pousada Aruamar com o telhado azul",
+  placeholder: "Foto da fachada da pousada",
 };
 
-// Versão do banner usada no celular. Enquanto uma foto vertical/otimizada
-// para mobile não é enviada, reaproveita a mesma foto do desktop — o que já
-// resolve o corte do logo, pois o "object-position" do mobile é diferente
-// (ver .hero-imagem-mobile no globals.css). Quando tiver uma foto vertical
-// (ex.: recortada em 3:4 ou 9:16 mostrando o logo por inteiro), basta trocar
-// o "src" abaixo por ela, ex.: "/fotos/foto-pousada-vista-do-mar-mobile.jpeg".
-export const FOTO_HERO_MOBILE: Foto = {
-  src: "/fotos/foto-pousada-vista-do-mar.jpeg",
-  alt: "Fachada da Pousada Aruamar vista do mar",
-  placeholder: "Foto da pousada vista do mar — vertical, otimizada para celular",
-};
-
-export const FOTOS_POUSADA: Foto[] = [
-  { src: "/fotos/varanda-ou-terraco.jpeg", alt: "Varanda da pousada", placeholder: "Varanda ou terraço" },
-  { src: "/fotos/detalhe-do-cafe.jpeg", alt: "Café da manhã servido na varanda", placeholder: "Detalhe do café" },
-  { src: "/fotos/quarto-com-vista.jpeg", alt: "Suíte com vista para o mar", placeholder: "Suíte com vista" },
-  { src: "/fotos/piscina-ou-jardim.jpg", alt: "Área externa da pousada", placeholder: "Piscina ou jardim" },
+/** Fotos da galeria horizontal da seção "A pousada". */
+export const GALERIA: FotoGaleria[] = [
+  { src: "/fotos/foto-pousada-vista-do-mar.jpeg", alt: "Fachada da Pousada Aruamar", placeholder: "Fachada", legenda: "Fachada", largura: 520 },
+  { src: "/fotos/piscina-ou-jardim.jpg", alt: "Jardim interno entre as alas da pousada", placeholder: "Jardim interno", legenda: "Jardim interno", largura: 380 },
+  { src: "/fotos/detalhe-do-cafe.jpeg", alt: "Salão do café da manhã", placeholder: "Salão do café", legenda: "Salão do café", largura: 460 },
+  { src: "/fotos/quarto-com-vista.jpeg", alt: "Vista do pátio e da fachada da pousada", placeholder: "Vista do pátio", legenda: "Vista do pátio", largura: 460 },
+  { src: "/fotos/varanda-ou-terraco.jpeg", alt: "Área de convivência da pousada", placeholder: "Área de convivência", legenda: "Área de convivência", largura: 420 },
+  { src: "/fotos/suite-individual.jpg", alt: "Suíte Individual", placeholder: "Suíte Individual", legenda: "Suíte Individual", largura: 380 },
 ];
 
 export const FOTO_LOCALIZACAO: Foto = {
   src: "/fotos/praia-ou-vista-aerea.jpeg",
-  alt: "Praia próxima à pousada",
+  alt: "Letreiro Eu amo Aracaju na orla",
   placeholder: "Praia ou vista aérea da região",
 };
 
 export const SELOS: Selo[] = [
-  { valor: "4", rotulo: "opções de acomodações" },
-  { valor: "5 min", rotulo: "até a praia" },
-  { valor: "24h", rotulo: "recepção" },
-  { valor: `R$ ${formatarPreco(DIARIA_MINIMA)}`, rotulo: "diária a partir de" },
+  { valor: "4", rotulo: "tipos de suíte, de 1 a 4 pessoas" },
+  { valor: "400 m", rotulo: "até a praia" },
+  { valor: "24h", rotulo: "de recepção, todos os dias" },
+  { valor: "9 min", rotulo: "de carro do aeroporto" },
 ];
 
 export const MIMOS: Mimo[] = [
@@ -73,46 +74,55 @@ export const QUARTOS: Quarto[] = [
   {
     id: "individual",
     nome: "Individual",
+    capacidade: 1,
     pessoas: "1 pessoa",
     preco: 130,
-    texto:
-      "Cama de Casal larga, mesa e banheiro privativo. Para quem viaja só e dorme com o som do mar.",
-    foto: { src: "/fotos/quarto-individual.jpeg", alt: "Suíte individual", placeholder: "Suíte individual" },
+    camas: "1 cama de casal larga",
+    idealPara: "Quem viaja só",
+    texto: "Cama de casal larga, mesa e banheiro privativo. Para quem viaja só e dorme com o som do mar.",
+    foto: { src: "/fotos/suite-individual.jpg", alt: "Suíte Individual da Pousada Aruamar", placeholder: "Suíte individual" },
   },
   {
     id: "duplo",
     nome: "Dupla",
+    capacidade: 2,
     pessoas: "2 pessoas",
     preco: 130,
-    texto:
-      "Cama de casal ou duas de solteiro, à sua escolha com mesa e banheiro privativo.",
-    foto: { src: "/fotos/quarto-duplo.jpeg", alt: "Suíte dupla", placeholder: "Suíte dupla" },
+    camas: "1 cama de casal ou 2 de solteiro",
+    idealPara: "Casais e amigos",
+    texto: "Cama de casal ou duas de solteiro, à sua escolha, com mesa e banheiro privativo.",
+    foto: { src: "/fotos/suite-dupla.jpg", alt: "Suíte Dupla da Pousada Aruamar", placeholder: "Suíte dupla" },
   },
   {
     id: "triplo",
     nome: "Tripla",
+    capacidade: 3,
     pessoas: "3 pessoas",
     preco: 170,
-    texto:
-      "Cama de Casal mais solteiro, mesa e banheiro privativo. O favorito de quem viaja com um filho.",
-    foto: { src: "/fotos/quarto-triplo.jpeg", alt: "Suíte tripla", placeholder: "Suíte tripla" },
+    camas: "1 cama de casal + 1 de solteiro",
+    idealPara: "Casal com um filho",
+    texto: "Cama de casal mais solteiro, mesa e banheiro privativo. A favorita de quem viaja com um filho.",
+    foto: { src: "/fotos/suite-tripla.jpg", alt: "Suíte Tripla da Pousada Aruamar", placeholder: "Suíte tripla" },
   },
   {
     id: "quadruplo",
     nome: "Quádrupla",
+    capacidade: 4,
     pessoas: "4 pessoas",
     preco: 210,
+    camas: "1 cama de casal + 2 de solteiro",
+    idealPara: "Família inteira",
     texto:
-      "Camas de casal e duas de solteiro. Mesa e banheiro privativo e espaço para bagagem de família inteira sem tropeço.",
-    foto: { src: "/fotos/quarto-quadruplo.jpeg", alt: "Suíte quádrupla", placeholder: "Suíte quádrupla" },
+      "Cama de casal e duas de solteiro, mesa, banheiro privativo e espaço para a bagagem da família inteira.",
+    foto: { src: "/fotos/suite-quadrupla.jpg", alt: "Suíte Quádrupla da Pousada Aruamar", placeholder: "Suíte quádrupla" },
   },
 ];
 
 export const ARREDORES: Arredor[] = [
-  { lugar: "Praia principal", tempo: "5 min a pé" },
-  { lugar: "Restaurantes e bares", tempo: "5 min a pé" },
-  { lugar: "Aeroporto", tempo: "a 9min de carro" },
-  { lugar: "Rodoviária", tempo: "a 20min de carro" },
-  { lugar: "Shopping", tempo: "a 3min de carro" },
-  { lugar: "Food park", tempo: "5 min a pé" },
+  { lugar: "Praia principal", minutos: 5, tipo: "a-pe", rotulo: "400 m" },
+  { lugar: "Restaurantes e bares", minutos: 5, tipo: "a-pe" },
+  { lugar: "Food park", minutos: 5, tipo: "a-pe" },
+  { lugar: "Shopping", minutos: 3, tipo: "carro" },
+  { lugar: "Aeroporto", minutos: 9, tipo: "carro" },
+  { lugar: "Rodoviária", minutos: 20, tipo: "carro" },
 ];
