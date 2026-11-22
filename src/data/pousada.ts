@@ -18,9 +18,16 @@ export const CONTATO: Contato = {
   mapa: "https://www.google.com/maps/search/?api=1&query=Rua+Evaldo+Campos+Junior+564+Aruana+Aracaju+SE",
 };
 
-/** Avisos exibidos junto aos preços (barra de reserva, suítes e páginas de cada suíte). */
+/**
+ * Avisos exibidos junto aos preços (faixa do topo, simulador, suítes, páginas de cada suíte e rodapé).
+ * Os preços do site são de BAIXA TEMPORADA. Na alta temporada a pousada cobra outros valores.
+ */
 export const AVISOS = {
-  valores: "Os valores podem ser alterados em feriados e datas especiais.",
+  temporada: "Preços de baixa temporada (dias normais).",
+  altaTemporada: "Na alta temporada, feriados e datas especiais os valores são diferentes.",
+  confirme: "Confirme o valor da sua data pelo WhatsApp.",
+  valores:
+    "Os preços do site são de baixa temporada (dias normais). Na alta temporada, feriados e datas especiais os valores são diferentes.",
   cafe: `Café da manhã é à parte: R$ ${formatarPreco(CAFE_DA_MANHA)} por pessoa, por dia.`,
 };
 

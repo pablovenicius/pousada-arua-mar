@@ -9,7 +9,7 @@ import { QUARTOS } from "@/data/pousada";
 export const metadata: Metadata = {
   title: "Suíte Tripla — Pousada Aruamar",
   description:
-    "Suíte tripla da Pousada Aruamar: cama de casal mais solteiro, mesa e banheiro privativo, a partir de R$ 170,00 a diária.",
+    "Suíte tripla da Pousada Aruamar: cama de casal mais solteiro, mesa e banheiro privativo, a partir de R$ 170,00 a diária na baixa temporada.",
 };
 
 export default function QuartoTriploPage() {

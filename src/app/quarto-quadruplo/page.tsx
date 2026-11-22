@@ -9,7 +9,7 @@ import { QUARTOS } from "@/data/pousada";
 export const metadata: Metadata = {
   title: "Suíte Quádrupla — Pousada Aruamar",
   description:
-    "Suíte quádrupla da Pousada Aruamar: camas de casal e duas de solteiro, mesa e banheiro privativo, a partir de R$ 210,00 a diária.",
+    "Suíte quádrupla da Pousada Aruamar: camas de casal e duas de solteiro, mesa e banheiro privativo, a partir de R$ 210,00 a diária na baixa temporada.",
 };
 
 export default function QuartoQuadruploPage() {

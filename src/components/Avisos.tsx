@@ -55,7 +55,7 @@ export default function Avisos({ variante = "claro", style }: AvisosProps) {
           <path d="M12 16h.01" />
         </svg>
         <span>
-          <strong>{AVISOS.valores}</strong> O valor final é confirmado pela recepção.
+          <strong>{AVISOS.temporada}</strong> {AVISOS.altaTemporada} {AVISOS.confirme}
         </span>
       </span>
       <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 8, flex: "1 1 260px" }}>

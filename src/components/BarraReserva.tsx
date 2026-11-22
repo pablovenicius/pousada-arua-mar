@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CAFE_DA_MANHA, MENSAGEM_PADRAO, QUARTOS, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
 import IconWhatsApp from "./IconWhatsApp";
+import { reportWhatsAppClick } from "@/lib/gtag";
 
 /** AAAA-MM-DD de hoje + N dias, no fuso do navegador. */
 function dataMais(dias: number): string {
@@ -85,10 +86,36 @@ export default function BarraReserva() {
   const txtNoites = `${noites} ${noites === 1 ? "noite" : "noites"}`;
   const mensagem =
     `${MENSAGEM_PADRAO}\n\nSimulação: Suíte ${suite.nome}, ${txtHospedes}, ` +
-    `de ${diaMes(checkin)} a ${diaMes(checkout)} (${txtNoites})${cafe ? ", com café da manhã" : ""}.`;
+    `de ${diaMes(checkin)} a ${diaMes(checkout)} (${txtNoites})${cafe ? ", com café da manhã" : ""}.\n` +
+    `Valor estimado no site (baixa temporada): R$ ${formatarPreco(total)}. Gostaria de confirmar o valor para essas datas.`;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* Cabeçalho do simulador: deixa claro que é estimativa de baixa temporada */}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 14px", padding: "0 6px" }}>
+        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--azul-escuro)" }}>Simule sua estadia</h2>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 12px",
+            borderRadius: 999,
+            background: "var(--coral-suave)",
+            color: "var(--coral-escuro)",
+            fontSize: 13,
+            fontWeight: 700,
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8v5" />
+            <path d="M12 16h.01" />
+          </svg>
+          Valores de baixa temporada · na alta temporada o preço muda
+        </span>
+      </div>
+
       <form
         id="reservar"
         aria-label="Consultar disponibilidade"
@@ -205,18 +232,22 @@ export default function BarraReserva() {
           }}
         >
           <span style={{ flex: "1 1 140px", display: "flex", flexDirection: "column", gap: 2 }} aria-live="polite">
-            <span style={{ fontSize: 12, color: "var(--azul-claro)", fontWeight: 600 }}>
-              {txtNoites} · Suíte {suite.nome}
-              {cafe ? " · com café" : ""}
+            <span style={{ fontSize: 11, color: "var(--coral-claro)", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              Estimativa · baixa temporada
             </span>
             <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.01em" }}>
               R$ {formatarPreco(total)}
+            </span>
+            <span style={{ fontSize: 12, color: "var(--azul-claro)", fontWeight: 600 }}>
+              {txtNoites} · Suíte {suite.nome}
+              {cafe ? " · com café" : ""}
             </span>
           </span>
           <a
             href={linkWhatsApp(undefined, mensagem)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={reportWhatsAppClick}
             className="btn"
             suppressHydrationWarning
             style={{
@@ -233,7 +264,7 @@ export default function BarraReserva() {
             }}
           >
             <IconWhatsApp size={18} />
-            Consultar no WhatsApp
+            Confirmar valor no WhatsApp
           </a>
         </div>
       </form>

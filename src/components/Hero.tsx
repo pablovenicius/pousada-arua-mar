@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CONTATO, DIARIA_MINIMA, FOTO_HERO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import BarraReserva from "./BarraReserva";
 import IconWhatsApp from "./IconWhatsApp";
+import LinkWhatsApp from "./LinkWhatsApp";
 
 export default function Hero() {
   return (
@@ -80,7 +81,7 @@ export default function Hero() {
             >
               Ver suítes e preços
             </Link>
-            <a
+            <LinkWhatsApp
               href={linkWhatsApp(undefined, MENSAGEM_PADRAO)}
               target="_blank"
               rel="noopener noreferrer"
@@ -100,7 +101,7 @@ export default function Hero() {
             >
               <IconWhatsApp size={20} color="var(--verde-whats)" />
               {CONTATO.telefone}
-            </a>
+            </LinkWhatsApp>
           </div>
         </div>
 
@@ -165,8 +166,8 @@ export default function Hero() {
               position: "absolute",
               right: 16,
               top: 16,
-              padding: "10px 16px",
-              borderRadius: 999,
+              padding: "8px 16px",
+              borderRadius: 18,
               background: "var(--coral)",
               color: "#1A0E05",
               fontSize: 14,
@@ -174,6 +175,7 @@ export default function Hero() {
             }}
           >
             a partir de R$ {DIARIA_MINIMA}/noite
+            <span style={{ display: "block", fontSize: 11, fontWeight: 700, textAlign: "center" }}>na baixa temporada</span>
           </div>
         </div>
       </div>

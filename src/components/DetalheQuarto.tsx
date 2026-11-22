@@ -4,6 +4,7 @@ import type { Quarto } from "@/types/pousada";
 import { MENSAGEM_PADRAO, MIMOS, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
 import IconWhatsApp from "./IconWhatsApp";
+import LinkWhatsApp from "./LinkWhatsApp";
 
 interface DetalheQuartoProps {
   quarto: Quarto;
@@ -85,9 +86,9 @@ export default function DetalheQuarto({ quarto }: DetalheQuartoProps) {
                 <span style={{ fontSize: 40, fontWeight: 800, letterSpacing: "-0.03em", color: "var(--azul-escuro)" }}>
                   R$ {formatarPreco(quarto.preco)}
                 </span>
-                <span style={{ fontSize: 14, color: "var(--tinta-clara)" }}>/ noite</span>
+                <span style={{ fontSize: 14, color: "var(--tinta-clara)" }}>/ noite na baixa temporada</span>
               </span>
-              <a
+              <LinkWhatsApp
                 href={linkWhatsApp(undefined, mensagemWhatsApp)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -107,7 +108,7 @@ export default function DetalheQuarto({ quarto }: DetalheQuartoProps) {
               >
                 <IconWhatsApp size={18} />
                 Faça sua Reserva
-              </a>
+              </LinkWhatsApp>
             </div>
 
             <Avisos />
@@ -145,7 +146,7 @@ export default function DetalheQuarto({ quarto }: DetalheQuartoProps) {
                       alignItems: "center",
                     }}
                   >
-                    {q.nome} · R$ {q.preco}
+                    {q.nome} · R$ {q.preco}/noite na baixa temporada
                   </Link>
                 ))}
               </div>

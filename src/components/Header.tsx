@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CONTATO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
+import { AVISOS, CONTATO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import IconInstagram from "./IconInstagram";
+import { reportWhatsAppClick } from "@/lib/gtag";
 
 const LINKS_NAV = [
   { href: "/#suites", label: "Suítes" },
@@ -28,6 +29,22 @@ export default function Header() {
         borderBottom: "1px solid rgba(14,36,51,0.08)",
       }}
     >
+      {/* Faixa de aviso de temporada — aparece em todas as páginas */}
+      <p
+        role="note"
+        style={{
+          margin: 0,
+          padding: "7px clamp(16px, 4vw, 40px)",
+          background: "var(--azul-escuro)",
+          color: "#FFFFFF",
+          fontSize: 13,
+          lineHeight: 1.4,
+          textAlign: "center",
+        }}
+      >
+        <strong style={{ color: "var(--coral-claro)" }}>{AVISOS.temporada}</strong> {AVISOS.altaTemporada}{" "}
+        <span className="so-desktop">{AVISOS.confirme}</span>
+      </p>
       <div
         style={{
           maxWidth: 1240,
@@ -162,7 +179,10 @@ export default function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className="btn-whatsapp-mobile"
-          onClick={fecharMenu}
+          onClick={() => {
+            reportWhatsAppClick();
+            fecharMenu();
+          }}
         >
           Reservar pelo WhatsApp
         </a>

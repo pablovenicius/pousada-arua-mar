@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GOOGLE_ADS_ID } from "@/lib/gtag";
 import "./globals.css";
 
 // Títulos e textos: sans moderna. Destaques em itálico: serifada.
@@ -22,7 +24,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Pousada Aruamar — hospedagem a 400 metros da praia em Aracaju",
   description:
-    "Suítes da Individual à Quádrupla no bairro Aruana, a 400 metros da praia. Diárias a partir de R$ 130,00, recepção 24h e café da manhã opcional.",
+    "Suítes da Individual à Quádrupla no bairro Aruana, a 400 metros da praia. Diárias a partir de R$ 130,00 na baixa temporada, recepção 24h e café da manhã opcional.",
 };
 
 // Viewport responsivo padrão: o site se adapta automaticamente ao tamanho da
@@ -39,6 +41,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <SpeedInsights />
+
+        {/* Tag do Google (Google Ads) — carregada uma única vez, em todas as páginas */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`} strategy="afterInteractive" />
+        <Script id="google-ads-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_ADS_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AVISOS, DIARIA_MAXIMA, DIARIA_MINIMA, MENSAGEM_PADRAO, QUARTOS, caminhoQuarto, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import Avisos from "./Avisos";
+import { reportWhatsAppClick } from "@/lib/gtag";
 
 const celula = { padding: "14px 18px" };
 const cabecalhoLinha = { ...celula, textAlign: "left" as const, fontWeight: 600, color: "var(--azul-claro)" };
@@ -48,7 +49,7 @@ export default function Acomodacoes() {
             </h2>
           </div>
           <p style={{ margin: 0, maxWidth: "36ch", fontSize: 15, lineHeight: 1.7, color: "var(--azul-claro)" }}>
-            Todas com banheiro privativo, ar-condicionado e mesa. Diárias de R$ {DIARIA_MINIMA} a R$ {DIARIA_MAXIMA}, sem
+            Todas com banheiro privativo, ar-condicionado e mesa. Diárias de R$ {DIARIA_MINIMA} a R$ {DIARIA_MAXIMA} na baixa temporada (na alta temporada os valores mudam), sem
             taxa escondida.
           </p>
         </div>
@@ -106,7 +107,7 @@ export default function Acomodacoes() {
                   </span>
                   <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
                     <span style={{ fontSize: 18, fontWeight: 800 }}>R$ {quarto.preco}</span>
-                    <span style={{ fontSize: 12, opacity: 0.75 }}>por noite</span>
+                    <span style={{ fontSize: 12, opacity: 0.75 }}>noite · baixa temp.</span>
                   </span>
                 </button>
               );
@@ -194,12 +195,13 @@ export default function Acomodacoes() {
                   <span style={{ fontSize: 34, fontWeight: 800, letterSpacing: "-0.03em", color: "var(--azul-escuro)" }}>
                     R$ {formatarPreco(atual.preco)}
                   </span>
-                  <span style={{ fontSize: 13, color: "var(--tinta-clara)" }}>/ noite</span>
+                  <span style={{ fontSize: 13, color: "var(--tinta-clara)" }}>/ noite na baixa temporada</span>
                 </span>
                 <a
                   href={linkWhatsApp(undefined, mensagem)}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={reportWhatsAppClick}
                   className="btn"
                   aria-label={`Reservar a Suíte ${atual.nome} pelo WhatsApp`}
                   style={{
@@ -258,10 +260,13 @@ export default function Acomodacoes() {
                   ))}
                 </tr>
                 <tr style={linha}>
-                  <th scope="row" style={cabecalhoLinha}>Diária</th>
+                  <th scope="row" style={cabecalhoLinha}>Diária (baixa temporada)</th>
                   {QUARTOS.map((q) => (
                     <td key={q.id} style={{ ...celula, fontWeight: 800, color: "var(--coral-claro)" }}>
                       R$ {q.preco}
+                      <span style={{ display: "block", fontSize: 11, fontWeight: 600, color: "var(--azul-claro)" }}>
+                        por noite, baixa temporada
+                      </span>
                     </td>
                   ))}
                 </tr>
@@ -269,7 +274,7 @@ export default function Acomodacoes() {
             </table>
           </div>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: "var(--azul-claro)" }}>
-            * Diárias sem café da manhã. {AVISOS.cafe} {AVISOS.valores}
+            * Diárias de baixa temporada, sem café da manhã. {AVISOS.altaTemporada} {AVISOS.confirme} {AVISOS.cafe}
           </p>
         </div>
       </div>
