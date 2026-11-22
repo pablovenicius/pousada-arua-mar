@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { CAFE_DA_MANHA, MENSAGEM_PADRAO, QUARTOS, formatarPreco, linkWhatsApp } from "@/data/pousada";
-import Avisos from "./Avisos";
+import {
+  PESSOA_EXTRA,
+  PRIMEIRA_NOITE,
+  TARIFAS_ATUALIZADAS_EM,
+  ULTIMA_NOITE,
+  calcularEstadia,
+} from "@/data/tarifas";
 import IconWhatsApp from "./IconWhatsApp";
 import { reportWhatsAppClick } from "@/lib/gtag";
 
@@ -22,6 +28,25 @@ function paraUTC(iso: string): number | null {
 
 /** "2026-11-20" → "20/11" */
 const diaMes = (iso: string) => iso.split("-").reverse().slice(0, 2).join("/");
+
+/** "2026-11-20" → "20/11/2026" */
+const dataBr = (iso: string) => iso.split("-").reverse().join("/");
+
+/** O dia mais tarde entre dois AAAA-MM-DD. */
+const maisTarde = (a: string, b: string) => (a > b ? a : b);
+
+/** Noite seguinte a uma data AAAA-MM-DD. */
+function diaSeguinte(iso: string): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
+/** false na renderização do servidor e na hidratação; true depois, no navegador. */
+const nadaMuda = () => () => {};
+function useNoNavegador(): boolean {
+  return useSyncExternalStore(nadaMuda, () => true, () => false);
+}
 
 const rotuloCampo = {
   display: "flex",
@@ -65,14 +90,18 @@ const botaoQtd = {
 };
 
 /**
- * Barra de consulta: o hóspede escolhe datas, número de pessoas e café.
- * A suíte é sugerida pela capacidade, a estimativa é calculada na hora e o
- * botão abre o WhatsApp com a mensagem pronta.
+ * Simulador: o hóspede escolhe datas, número de pessoas e café.
+ * O valor de cada noite vem do calendário de preços da pousada (data/tarifas.ts),
+ * igual ao mapa do sistema: diária de 1 ou 2 pessoas + R$ 40 por pessoa extra.
+ * A suíte é sugerida pela capacidade e o botão abre o WhatsApp com a mensagem pronta.
  */
 export default function BarraReserva() {
   // Exemplo inicial: 1 diária para 1 pessoa (Suíte Individual), até o visitante simular.
-  const [checkin, setCheckin] = useState(() => dataMais(7));
-  const [checkout, setCheckout] = useState(() => dataMais(8));
+  // Nunca antes da primeira noite com preço no site.
+  const [checkin, setCheckin] = useState(() => maisTarde(dataMais(7), PRIMEIRA_NOITE));
+  const [checkout, setCheckout] = useState(() => diaSeguinte(maisTarde(dataMais(7), PRIMEIRA_NOITE)));
+  // As datas dependem do relógio de quem visita: o valor só aparece depois que a página abre no navegador.
+  const noNavegador = useNoNavegador();
   const [hospedes, setHospedes] = useState(1);
   const [cafe, setCafe] = useState(false);
 
@@ -80,18 +109,57 @@ export default function BarraReserva() {
   const tOut = paraUTC(checkout);
   const noites = tIn !== null && tOut !== null ? Math.max(Math.round((tOut - tIn) / 864e5), 0) : 0;
   const suite = QUARTOS.find((q) => q.capacidade >= hospedes) ?? QUARTOS[QUARTOS.length - 1];
-  const total = noites * suite.preco + (cafe ? noites * hospedes * CAFE_DA_MANHA : 0);
+  const estadia = calcularEstadia(checkin, checkout, hospedes);
+  const valorCafe = cafe ? noites * hospedes * CAFE_DA_MANHA : 0;
+  const total = estadia.status === "ok" ? estadia.total + valorCafe : null;
 
   const txtHospedes = `${hospedes} ${hospedes === 1 ? "pessoa" : "pessoas"}`;
   const txtNoites = `${noites} ${noites === 1 ? "noite" : "noites"}`;
+  const calculo =
+    estadia.status === "ok"
+      ? estadia.grupos
+          .map((g) => `${g.noites} ${g.noites === 1 ? "noite" : "noites"} × R$ ${formatarPreco(g.diaria)}`)
+          .join(" + ") + (cafe ? ` + café R$ ${formatarPreco(valorCafe)}` : "")
+      : "";
+
+  // Selo e textos do resultado, conforme a estadia
+  let selo = "";
+  let destaque = "";
+  let detalhe = "";
+  if (estadia.status === "ok") {
+    selo = estadia.especial
+      ? `Valor de ${estadia.especial}`
+      : estadia.baixaTemporada
+        ? "Valor de baixa temporada"
+        : "Valor de alta temporada / data especial";
+    destaque = `R$ ${formatarPreco(total ?? 0)}`;
+    detalhe = calculo;
+  } else if (estadia.status === "minimo") {
+    selo = estadia.nome;
+    destaque = `Mínimo de ${estadia.minNoites} noites`;
+    detalhe = `Para o ${estadia.nome}, escolha pelo menos ${estadia.minNoites} noites.`;
+  } else if (estadia.status === "sem-tabela") {
+    selo = "Data ainda sem preço no site";
+    destaque = "Consulte o valor";
+    detalhe = `Temos preços de ${dataBr(PRIMEIRA_NOITE)} a ${dataBr(ULTIMA_NOITE)}.`;
+  } else {
+    selo = "Escolha as datas";
+    destaque = "—";
+    detalhe = "A saída precisa ser depois da chegada.";
+  }
+
+  const linhaValor =
+    estadia.status === "ok"
+      ? `Valor no site para essas datas: R$ ${formatarPreco(total ?? 0)} (${calculo}). Gostaria de confirmar a disponibilidade.`
+      : "Gostaria de saber o valor e a disponibilidade para essas datas.";
   const mensagem =
     `${MENSAGEM_PADRAO}\n\nSimulação: Suíte ${suite.nome}, ${txtHospedes}, ` +
     `de ${diaMes(checkin)} a ${diaMes(checkout)} (${txtNoites})${cafe ? ", com café da manhã" : ""}.\n` +
-    `Valor estimado no site (baixa temporada): R$ ${formatarPreco(total)}. Gostaria de confirmar o valor para essas datas.`;
+    linhaValor;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {/* Cabeçalho do simulador: deixa claro que é estimativa de baixa temporada */}
+      {/* Cabeçalho do simulador: o valor segue o calendário de preços da pousada */}
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 14px", padding: "0 6px" }}>
         <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--azul-escuro)" }}>Simule sua estadia</h2>
         <span
@@ -112,7 +180,7 @@ export default function BarraReserva() {
             <path d="M12 8v5" />
             <path d="M12 16h.01" />
           </svg>
-          Valores de baixa temporada · na alta temporada o preço muda
+          O valor muda conforme a data: baixa temporada, alta temporada e feriados
         </span>
       </div>
 
@@ -138,7 +206,8 @@ export default function BarraReserva() {
             className="campo"
             type="date"
             value={checkin}
-            min={dataMais(0)}
+            min={maisTarde(dataMais(0), PRIMEIRA_NOITE)}
+            max={ULTIMA_NOITE}
             onChange={(e) => setCheckin(e.target.value)}
             style={inputData}
             suppressHydrationWarning
@@ -150,7 +219,8 @@ export default function BarraReserva() {
             className="campo"
             type="date"
             value={checkout}
-            min={checkin}
+            min={diaSeguinte(checkin)}
+            max={diaSeguinte(ULTIMA_NOITE)}
             onChange={(e) => setCheckout(e.target.value)}
             style={inputData}
             suppressHydrationWarning
@@ -231,17 +301,20 @@ export default function BarraReserva() {
             color: "#FFFFFF",
           }}
         >
-          <span style={{ flex: "1 1 140px", display: "flex", flexDirection: "column", gap: 2 }} aria-live="polite">
+          <span style={{ flex: "1 1 160px", display: "flex", flexDirection: "column", gap: 2 }} aria-live="polite">
             <span style={{ fontSize: 11, color: "var(--coral-claro)", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              Estimativa · baixa temporada
+              {noNavegador ? selo : "Calculando…"}
             </span>
             <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.01em" }}>
-              R$ {formatarPreco(total)}
+              {noNavegador ? destaque : "—"}
             </span>
             <span style={{ fontSize: 12, color: "var(--azul-claro)", fontWeight: 600 }}>
               {txtNoites} · Suíte {suite.nome}
               {cafe ? " · com café" : ""}
             </span>
+            {noNavegador && detalhe && (
+              <span style={{ fontSize: 12, color: "var(--azul-claro)", lineHeight: 1.4 }}>{detalhe}</span>
+            )}
           </span>
           <a
             href={linkWhatsApp(undefined, mensagem)}
@@ -269,7 +342,30 @@ export default function BarraReserva() {
         </div>
       </form>
 
-      <Avisos />
+      <div
+        role="note"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px 22px",
+          padding: "14px 18px",
+          borderRadius: 16,
+          background: "var(--coral-suave)",
+          color: "var(--coral-escuro)",
+          fontSize: 14,
+          lineHeight: 1.5,
+        }}
+      >
+        <span style={{ flex: "1 1 320px" }}>
+          <strong>O simulador segue o calendário de preços da pousada</strong> (diárias para 1 ou 2 pessoas; cada
+          pessoa a mais soma R$ {formatarPreco(PESSOA_EXTRA)} por noite). Na alta temporada e nos feriados o valor é
+          maior. Valores atualizados em {dataBr(TARIFAS_ATUALIZADAS_EM)}, sujeitos a disponibilidade e confirmação
+          pela recepção.
+        </span>
+        <span style={{ flex: "1 1 240px" }}>
+          <strong>Café da manhã é à parte:</strong> R$ {formatarPreco(CAFE_DA_MANHA)} por pessoa, por dia.
+        </span>
+      </div>
     </div>
   );
 }
