@@ -9,7 +9,7 @@ import { QUARTOS } from "@/data/pousada";
 export const metadata: Metadata = {
   title: "Suíte Individual — Pousada Aruamar",
   description:
-    "Suíte individual da Pousada Aruamar: cama de casal larga, mesa e banheiro privativo, a partir de R$ 130,00 a diária.",
+    "Suíte individual da Pousada Aruamar: cama de casal larga, mesa e banheiro privativo, a partir de R$ 130,00 a diária na baixa temporada.",
 };
 
 export default function QuartoIndividualPage() {

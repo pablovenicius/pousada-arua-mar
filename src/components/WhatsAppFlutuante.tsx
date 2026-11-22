@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import IconWhatsApp from "./IconWhatsApp";
+import { reportWhatsAppClick } from "@/lib/gtag";
 
 /** Seleciona todos os links de WhatsApp da página, menos o próprio botão flutuante. */
 const SELETOR_WHATS = 'a[href*="wa.me"]:not([data-whats-flutuante])';
@@ -67,6 +68,7 @@ export default function WhatsAppFlutuante() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a pousada no WhatsApp"
+      onClick={reportWhatsAppClick}
       aria-hidden={oculto}
       tabIndex={oculto ? -1 : undefined}
       data-whats-flutuante=""

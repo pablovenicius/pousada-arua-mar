@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { AVISOS, CONTATO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import IconInstagram from "./IconInstagram";
+import LinkWhatsApp from "./LinkWhatsApp";
 
 const rotulo: CSSProperties = {
   margin: "0 0 4px",
@@ -49,9 +50,9 @@ export default function Footer() {
           </div>
           <div style={coluna}>
             <p style={rotulo}>Contato</p>
-            <a href={linkWhatsApp(undefined, MENSAGEM_PADRAO)} target="_blank" rel="noopener noreferrer" style={link}>
+            <LinkWhatsApp href={linkWhatsApp(undefined, MENSAGEM_PADRAO)} target="_blank" rel="noopener noreferrer" style={link}>
               {CONTATO.telefone}
-            </a>
+            </LinkWhatsApp>
             <a href={`mailto:${CONTATO.email}`} style={link}>
               {CONTATO.email}
             </a>

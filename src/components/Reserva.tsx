@@ -1,6 +1,7 @@
 import { CONTATO, MENSAGEM_PADRAO, linkWhatsApp } from "@/data/pousada";
 import IconInstagram from "./IconInstagram";
 import IconWhatsApp from "./IconWhatsApp";
+import LinkWhatsApp from "./LinkWhatsApp";
 
 const botaoContorno = {
   minHeight: 56,
@@ -49,7 +50,7 @@ export default function Reserva() {
           </p>
         </div>
         <div style={{ flex: "0 1 auto", display: "flex", flexWrap: "wrap", gap: 12 }}>
-          <a
+          <LinkWhatsApp
             href={linkWhatsApp(undefined, MENSAGEM_PADRAO)}
             target="_blank"
             rel="noopener noreferrer"
@@ -69,7 +70,7 @@ export default function Reserva() {
           >
             <IconWhatsApp size={20} />
             Chamar no WhatsApp
-          </a>
+          </LinkWhatsApp>
           <a href={`mailto:${CONTATO.email}`} className="btn" style={botaoContorno}>
             Enviar e-mail
           </a>
