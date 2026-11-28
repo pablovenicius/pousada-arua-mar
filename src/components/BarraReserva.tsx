@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { CAFE_DA_MANHA, MENSAGEM_PADRAO, QUARTOS, formatarPreco, linkWhatsApp } from "@/data/pousada";
 import {
   PESSOA_EXTRA,
@@ -8,6 +8,7 @@ import {
   TARIFAS_ATUALIZADAS_EM,
   ULTIMA_NOITE,
   calcularEstadia,
+  type ResultadoEstadia,
 } from "@/data/tarifas";
 import IconWhatsApp from "./IconWhatsApp";
 import { reportWhatsAppClick } from "@/lib/gtag";
@@ -40,6 +41,44 @@ function diaSeguinte(iso: string): string {
   const d = new Date(`${iso}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + 1);
   return d.toISOString().slice(0, 10);
+}
+
+/** Sistema da pousada, de onde vêm o preço e a vaga do dia (motor de reservas). */
+const MOTOR_URL = process.env.NEXT_PUBLIC_MOTOR_URL ?? "https://aruamar.onrender.com";
+
+/** Resposta de GET /api/publico/disponibilidade. */
+interface DadosMotor {
+  completo: boolean;
+  total: number | null;
+  dias: { data: string; diaria: number | null; disponivel: boolean }[];
+}
+
+type Estadia = ResultadoEstadia | { status: "indisponivel"; datas: string[] };
+
+/**
+ * Usa o preço e a vaga do sistema quando vieram; senão, mantém o cálculo pela tabela do site.
+ * Estadias de mínimo de noites (Réveillon) continuam pela regra do site.
+ */
+function resolverEstadia(local: ResultadoEstadia, remoto: DadosMotor | null): Estadia {
+  if (!remoto || local.status === "minimo" || local.status === "invalida") return local;
+  const semVaga = remoto.dias.filter((d) => !d.disponivel).map((d) => d.data);
+  if (semVaga.length > 0) return { status: "indisponivel", datas: semVaga };
+  if (!remoto.completo || remoto.total === null) return local;
+
+  const grupos: { noites: number; diaria: number }[] = [];
+  for (const d of remoto.dias) {
+    const diaria = d.diaria ?? 0;
+    const ultimo = grupos[grupos.length - 1];
+    if (ultimo && ultimo.diaria === diaria) ultimo.noites += 1;
+    else grupos.push({ noites: 1, diaria });
+  }
+  return {
+    status: "ok",
+    total: remoto.total,
+    grupos,
+    baixaTemporada: local.status === "ok" && local.baixaTemporada,
+    especial: local.status === "ok" ? local.especial : undefined,
+  };
 }
 
 /** false na renderização do servidor e na hidratação; true depois, no navegador. */
@@ -109,7 +148,25 @@ export default function BarraReserva() {
   const tOut = paraUTC(checkout);
   const noites = tIn !== null && tOut !== null ? Math.max(Math.round((tOut - tIn) / 864e5), 0) : 0;
   const suite = QUARTOS.find((q) => q.capacidade >= hospedes) ?? QUARTOS[QUARTOS.length - 1];
-  const estadia = calcularEstadia(checkin, checkout, hospedes);
+  // Preço e vaga vindos do sistema da pousada; enquanto não chegam, vale a tabela do site.
+  const [remoto, setRemoto] = useState<{ chave: string; dados: DadosMotor | null } | null>(null);
+  const chaveBusca = `${checkin}|${checkout}|${hospedes}`;
+  useEffect(() => {
+    if (noites <= 0) return;
+    const controle = new AbortController();
+    fetch(`${MOTOR_URL}/api/publico/disponibilidade?inicio=${checkin}&fim=${checkout}&adultos=${hospedes}&criancas=0`, {
+      signal: controle.signal,
+    })
+      .then((r) => (r.ok ? (r.json() as Promise<DadosMotor>) : null))
+      .then((dados) => setRemoto({ chave: chaveBusca, dados }))
+      .catch(() => {
+        if (!controle.signal.aborted) setRemoto({ chave: chaveBusca, dados: null });
+      });
+    return () => controle.abort();
+  }, [chaveBusca, checkin, checkout, hospedes, noites]);
+  const dadosRemotos = remoto?.chave === chaveBusca ? remoto.dados : null;
+
+  const estadia: Estadia = resolverEstadia(calcularEstadia(checkin, checkout, hospedes), dadosRemotos);
   const valorCafe = cafe ? noites * hospedes * CAFE_DA_MANHA : 0;
   const total = estadia.status === "ok" ? estadia.total + valorCafe : null;
 
@@ -138,6 +195,10 @@ export default function BarraReserva() {
     selo = estadia.nome;
     destaque = `Mínimo de ${estadia.minNoites} noites`;
     detalhe = `Para o ${estadia.nome}, escolha pelo menos ${estadia.minNoites} noites.`;
+  } else if (estadia.status === "indisponivel") {
+    selo = "Sem suíte livre nessas datas";
+    destaque = "Consulte a recepção";
+    detalhe = `Sem vaga em ${estadia.datas.map(dataBr).join(", ")}. Escolha outras datas ou fale com a recepção.`;
   } else if (estadia.status === "sem-tabela") {
     selo = "Data ainda sem preço no site";
     destaque = "Consulte o valor";
